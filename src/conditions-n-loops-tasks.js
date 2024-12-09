@@ -291,8 +291,23 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  let totalSum = 0;
+  let leftSum = 0;
+
+  for (let i = 0; i < arr.length; i = +1) {
+    totalSum += arr[i];
+  }
+
+  for (let i = 0; i < arr.length; i = +1) {
+    const rightSum = totalSum - leftSum - arr[i];
+    if (leftSum === rightSum) {
+      return i;
+    }
+    leftSum += arr[i];
+  }
+
+  return -1;
 }
 
 /**
@@ -316,8 +331,49 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    const row = [];
+    for (let j = 0; j < size; j += 1) {
+      row.push(0);
+    }
+    matrix.push(row);
+  }
+
+  let top = 0;
+  let bottom = size - 1;
+  let left = 0;
+  let right = size - 1;
+  let num = 1;
+
+  while (num <= size * size) {
+    for (let i = left; i <= right; i += 1) {
+      matrix[top][i] = num;
+      num += 1;
+    }
+    top += 1;
+
+    for (let i = top; i <= bottom; i += 1) {
+      matrix[i][right] = num;
+      num += 1;
+    }
+    right -= 1;
+
+    for (let i = right; i >= left; i -= 1) {
+      matrix[bottom][i] = num;
+      num += 1;
+    }
+    bottom -= 1;
+
+    for (let i = bottom; i >= top; i -= 1) {
+      matrix[i][left] = num;
+      num += 1;
+    }
+    left += 1;
+  }
+
+  return matrix;
 }
 
 /**
@@ -335,8 +391,27 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const n = matrix.length;
+  const clonedMatrix = JSON.parse(JSON.stringify(matrix)); // Клонируем матрицу
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = i + 1; j < n; j += 1) {
+      const temp = clonedMatrix[i][j];
+      clonedMatrix[i][j] = clonedMatrix[j][i];
+      clonedMatrix[j][i] = temp;
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j < Math.floor(n / 2); j += 1) {
+      const temp = clonedMatrix[i][j];
+      clonedMatrix[i][j] = clonedMatrix[i][n - j - 1];
+      clonedMatrix[i][n - j - 1] = temp;
+    }
+  }
+
+  return clonedMatrix;
 }
 
 /**
@@ -353,8 +428,33 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(inputArr) {
+  const arr = [...inputArr];
+  function quickSort(start, end) {
+    if (start >= end) return;
+
+    const pivot = arr[end];
+    let partitionIndex = start;
+
+    for (let i = start; i < end; i += 1) {
+      if (arr[i] <= pivot) {
+        const temp = arr[i];
+        arr[i] = arr[partitionIndex];
+        arr[partitionIndex] = temp;
+        partitionIndex += 1;
+      }
+    }
+
+    const temp = arr[partitionIndex];
+    arr[partitionIndex] = arr[end];
+    arr[end] = temp;
+
+    quickSort(start, partitionIndex - 1);
+    quickSort(partitionIndex + 1, end);
+  }
+
+  quickSort(0, arr.length - 1);
+  return arr;
 }
 
 /**
